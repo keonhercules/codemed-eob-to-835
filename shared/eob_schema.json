@@ -1,0 +1,132 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "EOB_intermediate",
+  "type": "object",
+  "required": ["meta", "payment", "payer", "payee", "claims"],
+  "properties": {
+    "meta": {
+      "type": "object",
+      "properties": {
+        "source_file": {"type": "string"},
+        "extraction_confidence": {"type": "number"},
+        "payer_detected": {"type": "string"},
+        "created_at": {"type": "string", "format": "date-time"}
+      }
+    },
+    "payment": {
+      "type": "object",
+      "required": ["amount", "date", "method", "trace_number"],
+      "properties": {
+        "amount": {"type": "number"},
+        "date": {"type": "string", "format": "date"},
+        "method": {"type": "string", "enum": ["CHK","ACH","NON"]},
+        "handling": {"type": "string", "enum": ["I","H","C","D"], "default": "I"},
+        "trace_number": {"type": "string"},
+        "bank_routing": {"type": "string"},
+        "bank_account": {"type": "string"}
+      }
+    },
+    "payer": {
+      "type": "object",
+      "required": ["name"],
+      "properties": {
+        "name": {"type": "string"},
+        "id_type": {"type": "string", "enum": ["2U","PI","XV"], "default": "2U"},
+        "id": {"type": "string"},
+        "address": {"type": "string"},
+        "city": {"type": "string"},
+        "state": {"type": "string"},
+        "zip": {"type": "string"}
+      }
+    },
+    "payee": {
+      "type": "object",
+      "required": ["name"],
+      "properties": {
+        "name": {"type": "string"},
+        "npi": {"type": "string"},
+        "tax_id": {"type": "string"},
+        "address": {"type": "string"},
+        "city": {"type": "string"},
+        "state": {"type": "string"},
+        "zip": {"type": "string"}
+      }
+    },
+    "claims": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["patient_control_number","total_charge","payment_amount","patient_responsibility","lines"],
+        "properties": {
+          "patient_control_number": {"type": "string"},
+          "payer_claim_control_number": {"type": "string"},
+          "claim_status_code": {"type": "string", "default": "1"},
+          "filing_indicator_code": {"type": "string"},
+          "total_charge": {"type": "number"},
+          "payment_amount": {"type": "number"},
+          "patient_responsibility": {"type": "number"},
+          "service_from": {"type": "string", "format": "date"},
+          "service_to": {"type": "string", "format": "date"},
+          "patient": {
+            "type": "object",
+            "properties": {
+              "last_name": {"type": "string"},
+              "first_name": {"type": "string"},
+              "member_id": {"type": "string"}
+            }
+          },
+          "subscriber": {
+            "type": "object",
+            "properties": {
+              "last_name": {"type": "string"},
+              "first_name": {"type": "string"},
+              "member_id": {"type": "string"}
+            }
+          },
+          "lines": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["code","charge","paid","units","service_date"],
+              "properties": {
+                "code": {"type": "string"},
+                "modifier": {"type": "string"},
+                "rev_code": {"type": "string"},
+                "charge": {"type": "number"},
+                "allowed": {"type": "number"},
+                "paid": {"type": "number"},
+                "units": {"type": "number"},
+                "service_date": {"type": "string", "format": "date"},
+                "adjustments": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": ["group","reason_code","amount"],
+                    "properties": {
+                      "group": {"type": "string", "enum": ["CO","PR","PI","CR"]},
+                      "reason_code": {"type": "string"},
+                      "amount": {"type": "number"}
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "plb": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["reason_qualifier","reference","amount","fiscal_period"],
+        "properties": {
+          "reason_qualifier": {"type": "string"},
+          "reference": {"type": "string"},
+          "amount": {"type": "number"},
+          "fiscal_period": {"type": "string"}
+        }
+      }
+    }
+  }
+}
