@@ -1,0 +1,14 @@
+{
+  "name": "codemed-eob-to-835",
+  "build": { "dockerfile": "Dockerfile" },
+  "features": {
+    "ghcr.io/devcontainers/features/node:1": { "version": "20" },
+    "ghcr.io/devcontainers/features/python:1": { "version": "3.11" },
+    "ghcr.io/devcontainers/features/google-cloud-cli:1": {}
+  },
+  "postCreateCommand": "pip install -r backend/requirements.txt && cd frontend && npm i",
+  "customizations": {
+    "vscode": { "extensions": ["GitHub.copilot", "ms-python.python", "esbenp.prettier-vscode"] }
+  },
+  "remoteEnv": { "NO_PHI_MODE": "true" }
+}
